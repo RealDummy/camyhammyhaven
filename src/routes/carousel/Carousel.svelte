@@ -3,117 +3,107 @@
 	import type { HTMLImgAttributes } from "svelte/elements";
 	import { spring, tweened } from "svelte/motion";
     import {AngleRightSolid, AngleLeftSolid} from "flowbite-svelte-icons";
+	import { onMount } from "svelte";
 
 
     export let slides: HTMLImgAttributes[];
-    let window_size = 3;
+    let window_size = 2;
     let window_scroll = 1;
-    let infinite = true;
+    let infinite = false;
     let index = 0;
-    let moving = false;
-    let move_queue = 0;
-    let positions = [spring(0), spring(0), spring(0)];
-    const LEFT = 0, CENTER = 1, RIGHT= 2;
-    $: center = positions[CENTER];
-    const SLIDER_MOVE_DIST = window_scroll*100/window_size;
-    const ACCOUNTED_MOVE_DIST = 100 / (window_size + 2 * window_scroll) * window_scroll;
-
-    function new_index(direction) {
-        return index+direction*window_scroll;
+    let offset = spring(0);
+    const FLING_MULTIPLIER = 20;
+    const SNAP_EPSILON = 0.03;
+    function out_bound(pos: number):boolean {
+        return !infinite && (pos < 0 || pos > (slides.length - 1));
     }
-
-    function move(direction: 1|-1){
-        if(moving) {
-            return;
-        }
-        moving = true;
-        positions[CENTER].set(ACCOUNTED_MOVE_DIST*-direction).then(()=>{
-            positions[CENTER].set(0,{hard: true});
-            index = new_index(direction);
-            moving = false;
+    onMount(()=>{
+        return offset.subscribe((pos)=>{
+            if(out_bound(pos - window_size)) {
+                return;
+            }
+            if (pos % 1 < 0.4) {
+                index = Math.floor(pos);
+            }
+            else if (pos % 1 < -0.6) {
+                index = Math.ceil(pos);
+            }
         });
-    }
-
-    function left() {
-        move(-1);
-    }
-    function right() {
-        move(1);
-    }
-
-    function wrap(i: Number): Number{
-        let len = slides.length;
-        return i>=0 ? (i%len) : ((len) + (i%len))%len;
-    }
-    function compute_window_infinite(index: number): number[] {
+    });
+    function compute_window(index: number) {
         let res = [];
-        for(let i=index-window_scroll; i < index+window_size+window_scroll; ++i) {
-            res.push(wrap(i));
+        let lower_bound = infinite ? -1 : (index == 0 ? 0 : -1);
+        let upper_bound = infinite ? window_size + 1 : Math.min(index + window_size, slides.length) - index;
+        for(let i = lower_bound; i < upper_bound; ++i) {
+            res.push(i + index);
         }
-        console.log(res);
         return res;
     }
-    function compute_window(index: Number): Number[] {
-        return infinite ? compute_window_infinite(index) : compute_window_clamped(index);
-    }
-
-    function begin_drag(e: DragEvent) {
-        e.preventDefault();
-        let start = e.clientX;
-        const bb = e.target.getBoundingClientRect();
-        const ratio = bb.width/100;
-        const snap = 100 / (window_size + 2*window_scroll);
-        positions[LEFT].set(-snap, {hard: true});
-        positions[RIGHT].set(snap, {hard: true});
-        
-        let unsub: Function | undefined;
-        let drag_index_updater = (pos: number)=>{
-            if(!unsub) {
-                console.log("block");
-                return;
-            }
-            if(pos > 100 || pos < -100) {
-                return;
-            }
-            if(pos > (snap/1.8)) {
-                console.log("run drag");
-
-                unsub();
-                unsub = undefined;
-                positions[RIGHT].update((p)=>p - snap*2, {hard: true});
-                positions = [positions[RIGHT], positions[LEFT], positions[CENTER]];
-                index = wrap(index-1);
-                unsub = positions[CENTER].subscribe(drag_index_updater);
-            } 
-            else if(pos < (-snap/1.8)){
-                console.log("run drag");
-
-                unsub();
-                unsub = undefined;
-                positions[LEFT].update((p)=>p+snap*2, {hard: true}).then(()=>{console.log("done")});
-                positions = [positions[CENTER], positions[RIGHT], positions[LEFT]];
-                index = wrap(index+1);
-                unsub = positions[CENTER].subscribe(drag_index_updater);
-            }
-        };
-        unsub = positions[CENTER].subscribe(drag_index_updater);
-        let drag = (e) => {
-            let dist = e.clientX - start;
-            positions.forEach((e)=>{
-                e.update((p)=>p+dist/ratio);
-            });
-            start = e.clientX;
+    function wrap(x: number): number {
+        if (x < 0) {
+            return (slides.length + (x % slides.length)) % slides.length;
         }
-        let end_drag = () => {
-            console.log("up");
-            document.removeEventListener("mouseup", end_drag);
-            document.removeEventListener("mousemove", drag);
-            center.set(0);
-            unsub();
+        return x % slides.length;
+    }
+    function left() {
+        if(out_bound(index - 1)) {
+            offset.update((p)=>p-0.2).then(()=>{
+                offset.set(index);
+            });
+            return;
+        }
+        offset.update((p) => p - window_scroll).then(()=>{
+                offset.update((o)=>wrap(o), {hard:true});
+                index = wrap(index);
+            });;
+    }
+    function right() {
+        if(out_bound(index + window_size + window_scroll)) {
+            offset.update((p)=>p+0.2).then(()=>{
+                offset.set(index);
+            });
+            return;
+        }
+        offset.update((p) => p + window_scroll).then(()=>{
+                offset.update((o)=>wrap(o), {hard:true});
+                index = wrap(index);
+            });;
+    }
+    function on_drag(e:any) {
+        e.preventDefault();
+        let x = e.clientX;
+        let target = e.originalTarget;
+        let {width} = target.getBoundingClientRect();
+        let start = x;
+        let last_frame = x;
+        let move = (e: MouseEvent) => {
+            let x = ((e.clientX - last_frame)/width) * window_size;
+            offset.update((p)=>p-x);
+            last_frame = e.clientX;
+        }
+        let end = (e: MouseEvent)=>{
+            document.removeEventListener("mousemove", move);
+            document.removeEventListener("mouseup", end);
+            let x = ((e.clientX - last_frame)/width) * window_size;
+            let d = ((e.clientX - start)/width) * window_size;
+            let g = d>0 ? Math.floor : Math.ceil
+            if (d < 0.03) {
+                g = Math.round;
+            }
+            let f = (pos: number) => {
+                if(out_bound(pos - window_size)) {
+                    return Math.min(Math.max(0,pos), slides.length - window_size);
+                }
+                return g(pos);
+            }
+            let snap = (p: number) => f(p-(x*FLING_MULTIPLIER));
+            offset.update(snap).then(()=>{
+                offset.update((o)=>wrap(o), {hard:true});
+                index = wrap(index);
+            });
         };
-        document.addEventListener("mouseup", end_drag);
-        document.addEventListener("mousemove", drag);
-
+        document.addEventListener("mousemove",move);
+        document.addEventListener("mouseup", end);
     }
 </script>
 
@@ -122,12 +112,10 @@
         <button class="left" on:click={left}>
             <AngleLeftSolid style="pointer-events: none;" tab-index="-1" />
         </button>
-        <div class="slider" on:dragstart={begin_drag} style="transform: translateX({$center - ACCOUNTED_MOVE_DIST}%); width: {100 + 2*SLIDER_MOVE_DIST}%" draggable="true">
-        {#if slides}
-            {#each compute_window(index) as i }
-                <img class="slide" src={slides[i].src} alt={slides[i].alt}>
+        <div class="slider" on:dragstart={on_drag} draggable="true">
+            {#each compute_window(index) as i, pos }
+                <img class="slide" src={slides[wrap(i)].src} alt={slides[wrap(i)].alt} style="left: {((pos - (infinite ? 1 : 0)) + index - $offset)*100/window_size}%">
             {/each}
-        {/if}
         </div>
         <button class="right" on:click={right}>
             <AngleRightSolid style="pointer-events: none;" tab-index="-1"  />
@@ -146,18 +134,15 @@
     }
     .slider {
         height: 100%;
-        position: absolute;
-        top: 0;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
+        position: relative;
     }
     .slide {
-        width: calc(100% / (var(--columns) + var(--slide) * 2));
+        width: calc(100% / var(--columns));
         height: 100%;
         object-fit: cover;
         padding: 10px;
         pointer-events: none;
+        position: absolute;
     }
     button {
         position: absolute;
