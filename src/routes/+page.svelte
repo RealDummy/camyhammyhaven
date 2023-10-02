@@ -1,5 +1,6 @@
 <script>
     import Carousel from './carousel/Carousel.svelte';
+	import SlideImage from './carousel/SlideImage.svelte';
     import {images} from './images';
 
     const transition_time = 5000;
@@ -24,7 +25,9 @@
 
 <section>
     <div class="mx-auto container h-96">
-        <Carousel slides={images}>
+        <Carousel slides={images} let:item>
+           <p>{item.title}</p>
+           <SlideImage item={item} />
         </Carousel>
     </div>
 </section>
