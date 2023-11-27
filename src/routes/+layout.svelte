@@ -20,9 +20,9 @@
 				<ChevronDownSolid class="w-3 h-3 ml-2 inline" />
 			</NavLi>
 			<Dropdown class="bg-primary-light rounded-lg">
-				<DropdownItem>Application</DropdownItem>
-				<DropdownItem>Bonding</DropdownItem>
-				<DropdownItem>FAQ</DropdownItem>
+				<DropdownItem href="/application">Application</DropdownItem>
+				<DropdownItem href="/bonding">Bonding</DropdownItem>
+				<DropdownItem href="/faq">FAQ</DropdownItem>
 			</Dropdown>
 			<NavLi class="cursor-pointer">Get Involved
 				<ChevronDownSolid class="w-3 h-3 ml-2 inline" />
