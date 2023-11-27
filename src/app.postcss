@@ -5,3 +5,59 @@
 @tailwind components;
 
 @tailwind utilities;
+
+/* Styles for .md pages */
+
+.md-content :is(h1, h2, h3, h4, h5, h6){
+    font-weight: bold;
+}
+.md-content h1 {
+    font-size: 3em;
+}
+.md-content h2 {
+    font-size: 2em;
+}
+.md-content h3 {
+    font-size: 1.5em;
+}
+.md-content h4 {
+    font-size: 1.25em;
+}
+.md-content h5 {
+    font-size: 1.125em;
+}
+.md-content hr {
+    margin: 10px 0px;
+}
+.md-content :is(h1, h2, h3, h4, h5, h6)+hr {
+    margin-top: 0px;
+}
+.md-content blockquote {
+    padding-left: 12px;
+    border-left: 8px solid theme('colors.secondary.dark');
+    background-color: theme('colors.secondary.DEFAULT');
+}
+
+.md-content img::before {
+    opacity: 0;
+}
+
+.md-content :is(ol, ul) {
+    padding-left: 20px;
+    list-style-position: inside;
+}
+
+.md-content ul>li {
+    list-style-type: disc;
+}
+
+.md-content ul>li>ul>li {
+    list-style-type: circle;
+}
+
+.md-content ol>li {
+    list-style-type: decimal;
+}
+.md-content ol>li>ol>li {
+    list-style-type: lower-alpha;
+}

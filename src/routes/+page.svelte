@@ -1,19 +1,11 @@
 <script>
-    import Carousel from './carousel/Carousel.svelte';
-	import SlideImage from './carousel/SlideImage.svelte';
+    import { Card } from 'flowbite-svelte';
+import Carousel from './carousel/Carousel.svelte';
     import {images} from './images';
 
     const transition_time = 5000;
     let duration=transition_time;
     let duration_reset = -1;
-    
-    let cancel_autoplay = () => {
-        duration = 0;
-        if(duration_reset !== -1) {
-            clearTimeout(duration_reset);
-        }
-        duration_reset = setTimeout(()=>{duration = transition_time; duration_reset = -1;})
-    };
 
 </script>
 
@@ -25,9 +17,14 @@
 
 <section>
     <div class="mx-auto container h-96">
-        <Carousel slides={images} let:item>
-           <p>{item.title}</p>
-           <SlideImage item={item} />
+        <Carousel slides={images} let:item size={3} infinite={false}>
+            <Card img={item.src ?? ""}>
+                <p>{item.title}</p>
+            </Card>
         </Carousel>
     </div>
 </section>
+
+<style>
+
+</style>

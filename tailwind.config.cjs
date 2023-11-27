@@ -4,7 +4,20 @@ const config = {
 
 	darkMode: 'class',
 	theme: {
-		extend: {}
+		colors: {
+			'primary': {
+				light: "#ffffff",
+				DEFAULT: "#94c6f7",
+				dark: "#0304f5",
+			},
+			'accent': "#ebc181",
+			'secondary': {
+				light: '#ffffff',
+				DEFAULT: '#00000019',
+				dark: '#10101010',
+			}
+			
+		}
 	},
 
 	plugins: [require('flowbite/plugin')],
