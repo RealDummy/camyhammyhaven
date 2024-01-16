@@ -15,7 +15,7 @@
 			<NavHamburger on:click={toggle} />
 		</div>
 		<NavUl {hidden} class="order-1">
-			<NavLi class=" m-0 cursor-pointer">Home</NavLi>
+			<NavLi class=" m-0 cursor-pointer"><a href="/">Home</a></NavLi>
 			<NavLi class="cursor-pointer">Adopt
 				<ChevronDownSolid class="w-3 h-3 ml-2 inline" />
 			</NavLi>

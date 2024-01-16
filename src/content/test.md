@@ -38,7 +38,6 @@ Quisque eros justo, semper a bibendum sed, ultrices quis nibh. Praesent sollicit
         2. d22
 - e
 
-
 #### header 4
 
 Aliquam accumsan justo sed tortor elementum suscipit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean accumsan vehicula tortor sit amet tristique. Etiam vel commodo nisl, non ornare mi. Praesent nisi quam, tristique eget felis sed, condimentum sodales nunc. Donec molestie vestibulum velit, et congue elit luctus nec. Vivamus gravida dapibus sapien et porta. Quisque sit amet efficitur mi. Mauris mattis, tortor ac mollis euismod, elit nunc volutpat justo, at convallis velit ligula id ipsum. Maecenas iaculis ligula ac bibendum sagittis. Maecenas quis ultricies diam. Integer nulla ex, tempus at nibh quis, convallis consequat ante. Donec eu sollicitudin turpis. Praesent placerat nec ex vel venenatis. Ut et tristique neque. Curabitur sed justo sit amet quam placerat viverra.
@@ -55,7 +54,7 @@ Aliquam accumsan justo sed tortor elementum suscipit. Lorem ipsum dolor sit amet
 
 ![large 1](/logo.png?large)![large 2](/logo.png?large)![large 3](/logo.png?large) 
 
-![1/2](/logo.png?half)![2/2](/logo.png?half)
+![1/2](/logo.png?half)
 
 ![1/3](/logo.png?third)![2/3](/logo.png?third)![3/3](/logo.png?third)
 

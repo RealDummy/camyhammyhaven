@@ -14,7 +14,7 @@ const config = {
 			'secondary': {
 				light: '#ffffff',
 				DEFAULT: '#00000019',
-				dark: '#10101010',
+				dark: '#1010107f',
 			}
 			
 		}

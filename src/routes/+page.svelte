@@ -1,11 +1,11 @@
-<script>
+<script lang="ts">
     import { Card } from 'flowbite-svelte';
-import Carousel from './carousel/Carousel.svelte';
-    import {images} from './images';
+    import Carousel from './carousel/Carousel.svelte';
+	import SlideImage from './carousel/SlideImage.svelte';
+
+    export let data;
 
     const transition_time = 5000;
-    let duration=transition_time;
-    let duration_reset = -1;
 
 </script>
 
@@ -17,10 +17,11 @@ import Carousel from './carousel/Carousel.svelte';
 
 <section>
     <div class="mx-auto container h-96">
-        <Carousel slides={images} let:item size={3} infinite={false}>
-            <Card img={item.src ?? ""}>
-                <p>{item.title}</p>
-            </Card>
+        <Carousel slides={data.images} let:item size={3} infinite={false}>
+            <div class="w-full h-5/6 relative">
+                <SlideImage {item} />
+            </div>
+            <p class="text-center">{item.title}</p>
         </Carousel>
     </div>
 </section>

@@ -25,20 +25,12 @@
             if(out_bound(pos + size - 1) || out_bound(pos)) {
                 return;
             }
-            if(pos > 0){
-                if (pos % 1 > 0.6) {
-                index = Math.ceil(pos);
-                }
-                else if (pos % 1 < 0.4) {
-                    index = Math.floor(pos);
-                }
-                return
+            let diff = pos-index;
+            if (diff > 0.6) {
+                index = index + 1;
             }
-            if (pos % 1 > -0.4) {
-                index = Math.ceil(pos);
-            }
-            else if (pos % 1 < -0.6) {
-                index = Math.floor(pos);
+            else if (diff < -0.6) {
+                index = index - 1;
             }
         });
     });
@@ -90,7 +82,7 @@
                 index = wrap(index);
             });
     }
-    function on_drag(getX: (arg0: Event|TouchEvent)=>number|null, getTarget: (arg0: Event|TouchEvent)=>HTMLElement|null) {
+    function on_drag(getX: (arg0: Event|TouchEvent)=>number|null, getTarget: (arg0: Event|TouchEvent)=>HTMLElement|null): (e:any)=>void {
         return (e: any) => {
             let x = getX(e);
             if(!x) {
@@ -107,7 +99,7 @@
             grabbed = true;
             let move = (e: MouseEvent | TouchEvent) => {
                 let x = getX(e);
-                if(!x){
+                if(x === null){
                     return;
                 }
                 let relX = ((x - last_frame)/width);
@@ -116,16 +108,16 @@
             }
             let end = (e: any)=>{
                 grabbed = false;
-                if(!e.clientX){
-                    document.removeEventListener("touchmove",move);
-                    document.removeEventListener("touchend", end);
+                if(e.clientX == null){
+                    window.removeEventListener("touchmove",move);
+                    window.removeEventListener("touchend", end);
                 }
                 else{
-                    document.removeEventListener("mousemove", move);
-                    document.removeEventListener("mouseup", end);
+                    window.removeEventListener("mousemove", move);
+                    window.removeEventListener("mouseup", end);
                 }
                 let x = getX(e);
-                if(!x){
+                if(x === null){
                     offset.set(index).then(()=>{
                         offset.update((o)=>wrap(o), {hard:true});
                         index = wrap(index);
@@ -151,12 +143,12 @@
                 });
             };
             if(!e.clientX) {
-                document.addEventListener("touchmove",move);
-                document.addEventListener("touchend", end);
+                window.addEventListener("touchmove",move);
+                window.addEventListener("touchend", end);
             }
             else {
-                document.addEventListener("mousemove",move);
-                document.addEventListener("mouseup", end);
+                window.addEventListener("mousemove",move);
+                window.addEventListener("mouseup", end);
             }
         }
     }
@@ -168,7 +160,6 @@
     }
     function getXtouch(e: any): number | null {
         if (e.changedTouches.length != 1) {
-            console.log(e);
             return null;
         }
         return e.changedTouches[0].clientX;
@@ -191,8 +182,8 @@
             </slot>
         </button>
         <div class="slider" on:dragstart={on_drag(getXmouse, getTargetMouse)} on:touchstart={on_drag(getXtouch, getTargetTouch)} draggable="true" role={undefined}>
-            {#each compute_window(index) as i, pos }
-            <div class="slide" style="left: {(pos -  (!infinite && index == 0 ? 0 : 1) + index - $offset)*(100/size)}%">
+            {#each compute_window(index) as i, pos (wrap(i)) }
+            <div class="slide" style="left: {(pos -  (!infinite && index === 0 ? 0 : 1) + index - $offset)*(100/size)}%">
                 <slot item={ slides[wrap(i)] }>
                     <SlideImage item={slides[wrap(i)]} />
                 </slot>
@@ -228,6 +219,7 @@
         position: absolute;
         display: flex;
         justify-content: center;
+        flex-direction: column;
     }
     button {
         position: absolute;

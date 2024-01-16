@@ -2,7 +2,7 @@
 
 ---
 
-![Pink and Amanda](PinkandAmanda.png)
+![](PinkandAmanda.png)
 
 ##### Why should I have a pair of pigs?
 
