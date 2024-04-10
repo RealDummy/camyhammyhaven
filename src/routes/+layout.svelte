@@ -5,7 +5,7 @@
 </script>
 
 <section>
-	<Navbar let:hidden let:toggle navClass="absolute w-full z-20 top-0 left-0 bg-primary">
+	<Navbar let:hidden let:toggle navClass="absolute w-full z-20 top-0 left-0 bg-primary drop-shadow">
 		<NavBrand href="/">
 			<img class="mr-3 h-20" src="logo.png" alt="logo">
 			<span class="hidden lg:block">Camy & Hammy Haven</span>
@@ -15,8 +15,8 @@
 			<NavHamburger on:click={toggle} />
 		</div>
 		<NavUl {hidden} class="order-1">
-			<NavLi class=" m-0 cursor-pointer"><a href="/">Home</a></NavLi>
-			<NavLi class="cursor-pointer">Adopt
+			<NavLi class=" m-0 cursor-pointer"><a href="/" class="text-lg">Home</a></NavLi>
+			<NavLi class="cursor-pointer"><span class="text-lg">Adopt</span>
 				<ChevronDownSolid class="w-3 h-3 ml-2 inline" />
 			</NavLi>
 			<Dropdown class="bg-primary-light rounded-lg">
@@ -24,7 +24,7 @@
 				<DropdownItem href="/bonding">Bonding</DropdownItem>
 				<DropdownItem href="/faq">FAQ</DropdownItem>
 			</Dropdown>
-			<NavLi class="cursor-pointer">Get Involved
+			<NavLi class="cursor-pointer"><span class="text-lg">Involved</span>
 				<ChevronDownSolid class="w-3 h-3 ml-2 inline" />
 			</NavLi>
 			<Dropdown class="bg-primary-light rounded-lg">
@@ -32,7 +32,7 @@
 				<DropdownItem>Volunteer</DropdownItem>
 				<DropdownItem>Socials</DropdownItem>
 			</Dropdown>
-			<NavLi class="cursor-pointer">Learn
+			<NavLi class="cursor-pointer"><span class="text-lg">Learn</span> 
 				<ChevronDownSolid class="w-3 h-3 ml-2 inline" />
 			</NavLi>
 			<Dropdown class="bg-primary-light rounded-lg">

@@ -4,22 +4,21 @@ import { env } from '$env/dynamic/private';
 
 import type { HTMLImgAttributes } from 'svelte/elements';
 
-const PASSWORD = env.PASSWORD;
-const USER = env.USERNAME;
-const ACCOUNT = env.ACCOUNT;
+const PASSWORD = env.SM_PASSWORD;
+const USERNAME = env.SM_USERNAME;
+const ACCOUNT = env.SM_ACCOUNT;
 
 interface Animal {
   id: number;
   name: string;
 }
 
-
-
 const DATA_INVALIDATION_TIME = 1000 * 60 * 2;
 
+export type DataT = {info: Animal, image: HTMLImgAttributes};
+
 class AnimalCache {
-  data: Animal[] = [];
-  images: HTMLImgAttributes[] = [];
+  data: DataT[] = [];
   last_fetch: number = 0;
 
   async load() {
@@ -29,10 +28,12 @@ class AnimalCache {
     }
     console.log("reloading cache!");
     this.data.splice(0, this.data.length);
-    this.images.splice(0, this.images.length);
 
-    let res = await fetch(`https://us06b.sheltermanager.com/service?method=json_adoptable_animals&username=${USER}&password=${PASSWORD}&account=${ACCOUNT}`);
+    let res = await fetch(`https://us06b.sheltermanager.com/service?method=json_adoptable_animals&username=${USERNAME}&password=${PASSWORD}&account=${ACCOUNT}`);
     let json = await res.json();
+    if(!(json instanceof Array)) {
+      throw json;
+    }
     this.last_fetch = Date.now();
 
     for(let animal of json) {
@@ -41,19 +42,20 @@ class AnimalCache {
       }
       this.data.push(this.createAnimal(animal));
     }
-    for(let animal of this.data) {
-      this.images.push({
-          src: `https://us06b.sheltermanager.com/service?method=animal_image&animalid=${animal.id}&account=${env.ACCOUNT}`,
-          alt: animal.name,
-          title: animal.name,
-      });
-    }
+    
   }
 
-  createAnimal(jsonObj: any): Animal {
+  createAnimal(jsonObj: any): DataT {
     return {
-      id: parseInt(jsonObj["ID"]),
-      name: jsonObj["ANIMALNAME"],
+      info: {
+        id: parseInt(jsonObj["ID"]),
+        name: jsonObj["ANIMALNAME"],
+      },
+      image: {
+          src: `https://us06b.sheltermanager.com/service?method=animal_image&animalid=${jsonObj["ID"]}&account=${ACCOUNT}`,
+          alt: jsonObj["ANIMALNAME"],
+          title: jsonObj["ANIMALNAME"],
+      }
     }
   }
 
@@ -79,8 +81,7 @@ export const load: PageServerLoad = async () => {
   await pigs.load();
 
   return {
-      pigs: pigs.data,
-      images: pigs.images,
+    data: pigs.data
   }
 }
 

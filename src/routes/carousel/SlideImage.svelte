@@ -3,7 +3,7 @@
     export let item: HTMLImgAttributes;
 </script>
 
-<img {...item} />
+<img {...item} loading="lazy" alt={item.alt ?? "guinea pig" }/>
 
 <style>
     img {
