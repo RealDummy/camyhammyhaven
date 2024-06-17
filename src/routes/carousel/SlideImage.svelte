@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { HTMLImgAttributes } from "svelte/elements";
-    export let item: HTMLImgAttributes;
+    export let item: any;
 </script>
 
 <img {...item} loading="lazy" alt={item.alt ?? "guinea pig" }/>

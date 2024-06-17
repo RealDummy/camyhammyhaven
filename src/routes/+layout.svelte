@@ -1,7 +1,11 @@
-<script>
+<script lang="ts">
 	import '../app.postcss';
   	import { Navbar, NavBrand, NavLi, NavUl, NavHamburger, Dropdown, DropdownItem, Button, } from 'flowbite-svelte';
 	import {ChevronDownSolid} from 'flowbite-svelte-icons';
+	import type { LayoutData } from './$types';
+
+	export let data: LayoutData;
+	const pages = data.pages;
 </script>
 
 <section>
@@ -16,7 +20,21 @@
 		</div>
 		<NavUl {hidden} class="order-1">
 			<NavLi class=" m-0 cursor-pointer"><a href="/" class="text-lg">Home</a></NavLi>
-			<NavLi class="cursor-pointer"><span class="text-lg">Adopt</span>
+			{#each Object.entries(pages) as [p,v] (p)}
+				{#if typeof v === "string"}
+					<NavLi class="cursor-pointer" href="{v}"><span class="text-lg">{p}</span></NavLi>
+				{:else}
+				<NavLi class="cursor-pointer"><span class="text-lg">{p}</span>
+					<ChevronDownSolid class="w-3 h-3 ml-2 inline" />
+				</NavLi>
+				<Dropdown class="bg-primary-light rounded-lg">
+					{#each v as s}
+						<DropdownItem href="{s.href}">{s.name}</DropdownItem>
+					{/each}
+				</Dropdown>
+				{/if}
+			{/each}
+			<!-- <NavLi class="cursor-pointer"><span class="text-lg">Adopt</span>
 				<ChevronDownSolid class="w-3 h-3 ml-2 inline" />
 			</NavLi>
 			<Dropdown class="bg-primary-light rounded-lg">
@@ -41,7 +59,7 @@
 				<DropdownItem>Guinea Pig Health</DropdownItem>
 				<DropdownItem>Guinea Pig Chit Chat</DropdownItem>
 				<DropdownItem>Hamsters</DropdownItem>
-			</Dropdown>
+			</Dropdown> -->
 		</NavUl>
 	</Navbar>
 	<div style="height: 80px;"></div>

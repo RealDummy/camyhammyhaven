@@ -8,14 +8,19 @@ const PASSWORD = env.SM_PASSWORD;
 const USERNAME = env.SM_USERNAME;
 const ACCOUNT = env.SM_ACCOUNT;
 
-interface Animal {
+export interface Animal {
   id: number;
   name: string;
+  description?: string;
 }
 
 const DATA_INVALIDATION_TIME = 1000 * 60 * 2;
 
 export type DataT = {info: Animal, image: HTMLImgAttributes};
+
+
+const pig_slides = import.meta.glob("../../static/gp/*");
+
 
 class AnimalCache {
   data: DataT[] = [];
@@ -50,6 +55,7 @@ class AnimalCache {
       info: {
         id: parseInt(jsonObj["ID"]),
         name: jsonObj["ANIMALNAME"],
+        description: jsonObj["ANIMALCOMMENTS"]
       },
       image: {
           src: `https://us06b.sheltermanager.com/service?method=animal_image&animalid=${jsonObj["ID"]}&account=${ACCOUNT}`,
@@ -81,7 +87,8 @@ export const load: PageServerLoad = async () => {
   await pigs.load();
 
   return {
-    data: pigs.data
+    data: pigs.data,
+    slide_urls: Object.keys(pig_slides)
   }
 }
 

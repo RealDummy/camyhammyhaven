@@ -6,7 +6,7 @@
 
 
 
-    export let slides: HTMLImgAttributes[];
+    export let slides: any[];
     export let size = 1;
     export let scroll = 1;
     export let infinite = false;
