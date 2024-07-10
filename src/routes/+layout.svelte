@@ -11,7 +11,7 @@
 <section>
 	<Navbar let:hidden let:toggle navClass="absolute w-full z-20 top-0 left-0 bg-primary drop-shadow">
 		<NavBrand href="/">
-			<img class="mr-3 h-20" src="logo.png" alt="logo">
+			<img class="mr-3 h-20" src="/logo.png" alt="logo">
 			<span class="hidden lg:block">Camy & Hammy Haven</span>
 		</NavBrand>
 		<div class="flex md:order-2">

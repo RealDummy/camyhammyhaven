@@ -55,8 +55,3 @@ To keep your guinea pigs physically and mentally healthy, here are a few tips:
 
 One thing: You should have a vet for your guinea pigs before you ever need one. If you notice any symptoms of illness, like  **weight or hair loss, excessive scratching, breathing difficulties, discharge from the eyes or nose, lumps, skin lesions, lethargy, diarrhea, or overgrown teeth,** take them to the vet. We also recommend yearly checkups for the little guys and gals.
 
----
- 
-linebreak
- 
-![image](/logo.png)

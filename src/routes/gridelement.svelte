@@ -8,24 +8,27 @@
     $: console.log(show);
 </script>
 
-<img {...img} class="h-96" alt="{info.name} z-10">
-<h4 class="text-lg font-bold text-center">{info.name}</h4>
-{#if !!info.description}
-<div class="relative p-0 m-0">
-    <button class="box-border w-full border-solid border-2 border-primary rounded-lg m-0 p-0" 
-    on:click={()=>{show=!show}}
-    on:keydown={
-        (e)=>{if(show && e.key=="Escape") show=false}
-    }>
-        read more 
-        <IconSolid size="xs" icon={ChevronDownSolid} class="inline"></IconSolid>
+<div class= "rounded p-2">
+    <img {...img} class="h-96 w-full rounded object-cover" alt="{info.name} z-10">
+    <h4 class="text-lg font-bold text-center">{info.name}</h4>
+    {#if !!info.description}
+    <div class="relative p-0 m-0 rounded">
+        <button class="box-border w-full border-solid border border-primary rounded-lg m-0 p-0" 
+        on:click={()=>{show=!show}}
+        on:keydown={
+            (e)=>{if(show && e.key=="Escape") show=false}
+        }>
+            read more 
+            <IconSolid size="xs" icon={ChevronDownSolid} class="inline" tabindex="-1" ></IconSolid>
+        </button>
+        <button on:click={()=>show=false}
+        class="w-full top-5 border-solid border-t-0 border border-primary rounded-br-lg rounder-bl-lg absolute bg-white m-0 p-0" 
+        style="display: block; transform: scaleY({show ? "1":"0"}); transition: transform 0.3s ease-out; transform-origin: top;">
+            <br>{info.description}
     </button>
-    <button on:click={()=>show=false}
-    class="w-full top-5 border-solid border-t-0 border-2 border-primary rounded-br-lg rounder-bl-lg absolute bg-white m-0 p-0" 
-    style="display: block; transform: scaleY({show ? "1":"0"}); transition: transform 0.3s ease-out; transform-origin: top;">
-        <br>{info.description}
-</button>
+
+    </div>
+    {/if}
 
 </div>
-{/if}
 

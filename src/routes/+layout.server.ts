@@ -13,7 +13,7 @@ export const load: LayoutServerLoad = async () => {
         let folder = split[split.length - 2];
         let filename = split[split.length - 1];
         let page_name = filename.split(".")[0];
-        let page_loc = '/' + folder + '/' + page_name;
+        let page_loc = '/content/' + folder + '/' + page_name;
         if(!(folder in pages)) {
             pages[folder] = [];
         }
@@ -29,14 +29,14 @@ export const load: LayoutServerLoad = async () => {
         let split = md.split('/');
         let filename = split[split.length - 1];
         let page_name = filename.split(".")[0] ?? "";
-        let page_loc = '/' + page_name
+        let page_loc = '/content/' + page_name
         if(!(page_name in pages)) {
             pages[page_name] = page_loc;
             continue;
         }
         throw `file ${filename} present, but folder ${page_name} exists and is not empty`;
     }
-    console.log(pages)
+    
     return {
         pages
     };
