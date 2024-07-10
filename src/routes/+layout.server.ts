@@ -1,7 +1,7 @@
 import type { LayoutServerLoad} from './$types';
 
-const nested_content = import.meta.glob("../content/*/*.md")
-const flat_content = import.meta.glob("../content/*.md")
+const nested_content = import.meta.glob("/src/content/*/*.md")
+const flat_content = import.meta.glob("/src/content/*.md")
 
 export const load: LayoutServerLoad = async () => {
     let pages: {
