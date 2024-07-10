@@ -9,7 +9,7 @@
 </script>
 
 <div class= "rounded p-2">
-    <img {...img} class="h-96 w-full rounded object-cover" alt="{info.name} z-10">
+    <img {...img} loading="lazy" class="h-96 w-full rounded object-cover" alt="{info.name} z-10">
     <h4 class="text-lg font-bold text-center">{info.name}</h4>
     {#if !!info.description}
     <div class="relative p-0 m-0 rounded">

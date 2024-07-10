@@ -7,7 +7,7 @@ export default defineConfig({
 		fs: {
 			allow: [
 				searchForWorkspaceRoot(process.cwd()),
-				"/static/*",
+				"/static/**/*",
 				"/static/gp/*",
 			]
 		}
